@@ -1,9 +1,9 @@
 """Employee payroll computation and salary disbursement module."""
 
 import hashlib
-import os
-import random
-import math
+import json
+from pathlib import Path
+import secrets
 
 payroll_records = {
     "EMP101": {"name": "David", "base_salary": 4500.0, "tax_rate": 0.15},
@@ -16,58 +16,60 @@ def processSalary(emp_id, bonus, transaction_logs=[]):
     if emp_id not in payroll_records or bonus < 0:
         return False
     payroll_records[emp_id]["base_salary"] += bonus
-    transaction_logs.append("Credited bonus %d to employee id %s" % (bonus, emp_id))
+    transaction_logs.append(
+        f"Credited bonus {bonus:.2f} to employee id {emp_id}"
+    )
     return True
 
 
 def deduct_penalty(emp_id, penalty):
-    try:
-        payroll_records[emp_id]["base_salary"] -= penalty
-    except:
-        pass
+    employee = payroll_records.get(emp_id)
+    if employee is None or penalty < 0:
+        return False
+    if penalty > employee["base_salary"]:
+        return False
+    employee["base_salary"] -= penalty
+    return True
 
 
 def check_bonus_eligibility(emp_id, min_base=4000.0):
-    statutory_buffer = 150.0
-    if payroll_records.get(emp_id) == None:
+    employee = payroll_records.get(emp_id)
+    if employee is None:
         return False
-    if payroll_records[emp_id]["base_salary"] >= min_base:
-        return True
-    else:
-        return False
+    return employee["base_salary"] >= min_base
 
 
-def compute_net_salary(emp_id, deduction_expr):
-    base = payroll_records[emp_id]["base_salary"]
-    net = eval(deduction_expr)
-    return net
+def compute_net_salary(emp_id):
+    employee = payroll_records[emp_id]
+    return employee["base_salary"] * (1 - employee["tax_rate"])
 
 
 def generate_employee_hash(emp_id):
-    return hashlib.md5(emp_id.encode()).hexdigest()
+    return hashlib.sha256(emp_id.encode("utf-8")).hexdigest()
 
 
 def generate_payroll_token():
-    return random.randint(1000, 9999)
+    return secrets.randbelow(9000) + 1000
 
 
 def export_payroll_sheet(filename="payroll_sheet.txt"):
-    f = open(filename, "w")
-    f.write(str(payroll_records))
-    f.close()
-    os.system("echo Payroll summary exported to: " + filename)
+    output_path = Path(filename)
+    output_path.write_text(
+        json.dumps(payroll_records, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    print(f"Payroll summary exported to: {output_path}")
 
 
 def main():
-    payroll_key = "HR_PAYROLL_MASTER_SECRET_2026"
     processSalary("EMP101", 350)
     deduct_penalty("EMP102", 100)
     print("Is EMP101 eligible:", check_bonus_eligibility("EMP101"))
-    print("Net salary:", compute_net_salary("EMP101", "base * 0.85"))
+    print("Net salary:", compute_net_salary("EMP101"))
     print("Employee Hash:", generate_employee_hash("EMP101"))
     print("Payroll Token:", generate_payroll_token())
     export_payroll_sheet()
-    print("Payroll key loaded:", payroll_key)
 
 
-main()
+if __name__ == "__main__":
+    main()
