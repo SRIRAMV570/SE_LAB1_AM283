@@ -1,51 +1,46 @@
 # Lab 5: Static Code Analysis — Employee Payroll System
 
-**Your file:** `employee_payroll_system.py`
+This folder contains the updated payroll program and the deliverables for the
+Pylint, Bandit, and Flake8 lab.
 
-Follow the lab handout for the full instructions.
+## Files
 
-## About the program
+- `employee_payroll_system.py` — cleaned payroll example.
+- `issues.md` — baseline findings and their fixes.
+- `reflection.md` — reflections on the static analysis work.
+- `report.md` — summary of the checks and outcomes.
+- `*_report_before.txt` and `*_report_after.txt` — analyzer output before and
+  after the fixes.
+- `Lab_5_Static_Code_Analysis_Student_handout_261020_135935.pdf` — lab
+  handout.
 
-An employee salary and payroll manager. It logs bonuses, deducts disciplinary penalties, checks eligibility thresholds, computes net disbursements, and exports payroll summaries.
+## Run the program
 
-The code works, but only just. It has quality, style and security problems of the kind Pylint, Flake8 and Bandit are built to find.
+From this directory:
 
-## What to do
+```powershell
+python employee_payroll_system.py
+```
 
-1. **Run it first** and read the output carefully:
-   ```bash
-   python employee_payroll_system.py
-   ```
-   It asks one question. Press Enter to use the default, then try a few inputs of your own. Not every problem in this file is something a tool will flag, so pay attention to output that looks wrong.
+The sample run credits a bonus, deducts a penalty, calculates net salary using
+the employee's configured tax rate, generates an employee digest and a
+four-digit token, and exports the payroll records to `payroll_sheet.txt`.
 
-2. **Install the tools:**
-   ```bash
-   pip install pylint bandit flake8
-   ```
+## Re-run the analysis
 
-3. **Run the analysis** and save the reports:
-   ```bash
-   pylint employee_payroll_system.py > pylint_report.txt
-   bandit -r employee_payroll_system.py > bandit_report.txt
-   flake8 employee_payroll_system.py > flake8_report.txt
-   ```
+Install the tools if they are not already available:
 
-4. **Document the issues** in `issues.md` using this table (at least 4 rows, high and medium severity first):
+```powershell
+python -m pip install pylint bandit flake8
+```
 
-   | Issue | Type | Line(s) | Description | Fix Approach |
-   |-------|------|---------|-------------|--------------|
-   | ... | ... | ... | ... | ... |
+Run them from this directory:
 
-5. **Fix the code.** Fix at least 4 of the issues you documented, then rerun all three tools to confirm they are gone. Repeat until you are satisfied. The program should still do its job when you are done.
+```powershell
+python -m pylint --reports=n employee_payroll_system.py
+python -m bandit -r employee_payroll_system.py
+python -m flake8 employee_payroll_system.py
+```
 
-6. **Reflect.** Answer the four reflection questions from the handout in `reflection.md`.
-
-## Deliverables
-
-1. `employee_payroll_system.py`: your cleaned version, with at least 4 issues fixed.
-2. `issues.md`: the completed issue table.
-3. `reflection.md`: your answers to the reflection questions.
-
-**Target:** aim for a Pylint score above 9.5 on your final file. A perfect 10.00/10 is very good.
-
-Be ready to explain the bugs you found and how you fixed them. You may be called on to present.
+The `*_report_before.txt` files preserve the original findings. The
+`*_report_after.txt` files record the results after the fixes.
