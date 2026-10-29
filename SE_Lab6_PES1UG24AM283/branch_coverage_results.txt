@@ -1,0 +1,14 @@
+Lab 6 - Branch coverage results
+
+PS> python -m coverage erase
+
+PS> python -m coverage run --branch --source=scholarship_awards -m pytest -q BranchCoverageTest_PES1UG24AM283_scholarship_awards.py
+.....................                                                    [100%]
+21 passed in 0.09s
+
+PS> python -m coverage report -m scholarship_awards.py
+Name                    Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------
+scholarship_awards.py      37      0     26      0   100%
+-------------------------------------------------------------------
+TOTAL                      37      0     26      0   100%
