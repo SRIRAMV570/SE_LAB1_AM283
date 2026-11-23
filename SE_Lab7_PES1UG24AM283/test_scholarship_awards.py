@@ -43,3 +43,7 @@ def test_payable_award_valid_examples():
     assert payable_award('5000|500') == 5400.0
     assert payable_award('100|500') == 0.0
     assert payable_award('abc|100') == 0.0
+
+
+def test_marks_average_overflow_is_safe():
+    assert marks_average('72,1e400,90') == 81

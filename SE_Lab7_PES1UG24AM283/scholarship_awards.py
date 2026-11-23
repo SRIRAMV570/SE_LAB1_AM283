@@ -45,7 +45,7 @@ def marks_average(marks_csv):
             continue
         try:
             values.append(int(float(cleaned)))
-        except ValueError:
+        except (ValueError, OverflowError):
             continue
 
     if not values:
